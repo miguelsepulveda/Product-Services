@@ -1,10 +1,10 @@
 package cl.aligare.demo.restcontroller;
 
 import java.math.BigDecimal;
-import java.util.List;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.MediaType;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
@@ -32,42 +32,81 @@ public class ProductController {
     }
 	
 	@RequestMapping(path = "/product", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET )
-    public List<Product> getProducts() {
-        return productService.listAll();
+    public ResponseProduct getProducts() {
+		try {
+			ResponseProduct response = new ResponseProduct(0L,"OK");
+            response.setListProduct(productService.listAll());
+            return response;
+        }catch (Exception e) {
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
+		} 
     }
 	
 	@RequestMapping(path = "/product", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST )
-    public Product addProduct(@RequestBody Product producto) {
-        return productService.saveOrUpdate(producto);
+    public ResponseProduct addProduct(@RequestBody Product producto) {
+		try {
+			ResponseProduct response = new ResponseProduct(0L,"OK");
+            response.setProduct(productService.saveOrUpdate(producto));
+            return response;
+        }catch (Exception e) {
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
+		} 
     }
 	
-	@RequestMapping(path = "/product/demo", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST )
-    public Product addProductDemo() {
-        Product pr = new Product();
-        pr.setId(1L);
-        pr.setDescription("CUchi");
-        pr.setImageUrl("http://www.google.cl");
-        pr.setPrice(new BigDecimal(2000));
-		return productService.saveOrUpdate(pr);
+	@RequestMapping(path = "/product", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.PUT )
+    public ResponseProduct editProduct(@RequestBody Product producto) {
+		try {
+			ResponseProduct response = new ResponseProduct(0L,"OK");
+            response.setProduct(productService.saveOrUpdate(producto));
+            return response;
+        }catch (Exception e) {
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
+		} 
+    }
+	
+	@RequestMapping(path = "/demo", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.POST )
+    public ResponseProduct addProductDemo() {
+		try {
+			Product pr = new Product();
+	        pr.setId(1L);
+	        pr.setDescription("CUchi");
+	        pr.setImageUrl("http://www.google.cl");
+	        pr.setPrice(new BigDecimal(2000));
+	        
+			ResponseProduct response = new ResponseProduct(0L,"OK");
+            response.setProduct(productService.saveOrUpdate(pr));
+            return response;
+        }catch (Exception e) {
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
+		} 
+		
     }
 	
 	@RequestMapping(path = "/product", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.DELETE )
     public ResponseProduct deleteProducts(@RequestParam(name="id") Long id) {
         try {
         	productService.delete(id);
-            ResponseProduct response = new ResponseProduct();
-            response.setCodRes(0L);
-            response.setMsjeRes("OK");
+            return new ResponseProduct(0L,"OK");
+        }catch (Exception e) {
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
+		}
+    }
+	
+	@RequestMapping(path = "/product/{id}", produces = MediaType.APPLICATION_JSON_VALUE, method = RequestMethod.GET)
+    public ResponseProduct getProduct(@PathVariable(name="id") Long id) {
+        try {
+            ResponseProduct response = new ResponseProduct(0L,"OK");
+            response.setProduct(productService.getById(id));
             return response;
         }catch (Exception e) {
-        	System.out.println(e);
-            ResponseProduct response = new ResponseProduct();
-            response.setCodRes(-1L);
-            response.setMsjeRes("NOK");
-            return response;
+        	System.err.println(e);
+            return new ResponseProduct(-1L,"NOK");
 		} 
-		
-         
     }
 	
 }

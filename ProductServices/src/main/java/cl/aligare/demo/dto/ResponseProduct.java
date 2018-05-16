@@ -1,7 +1,8 @@
 package cl.aligare.demo.dto;
 
 import java.util.List;
-import java.util.Optional;
+
+import com.fasterxml.jackson.annotation.JsonInclude;
 
 import cl.aligare.demo.model.Product;
 
@@ -11,10 +12,13 @@ import cl.aligare.demo.model.Product;
  *
  */
 public class ResponseProduct {
+	
 	private Long codRes;
 	private String msjeRes;
-	private Optional<Product> product;
-	private Optional<List<Product>> listProduct;
+	@JsonInclude(JsonInclude.Include.NON_NULL) 
+	private Product product;
+	@JsonInclude(JsonInclude.Include.NON_NULL) 
+	private List<Product> listProduct;
 	
 	public Long getCodRes() {
 		return codRes;
@@ -28,18 +32,31 @@ public class ResponseProduct {
 	public void setMsjeRes(String msjeRes) {
 		this.msjeRes = msjeRes;
 	}
-	public Optional<Product> getProduct() {
+	public Product getProduct() {
 		return product;
 	}
-	public void setProduct(Optional<Product> product) {
+	public void setProduct(Product product) {
 		this.product = product;
 	}
-	public Optional<List<Product>> getListProduct() {
+	public List<Product> getListProduct() {
 		return listProduct;
 	}
-	public void setListProduct(Optional<List<Product>> listProduct) {
+	public void setListProduct(List<Product> listProduct) {
 		this.listProduct = listProduct;
 	}
-	
+	public ResponseProduct(Long codRes, String msjeRes) {
+		this.codRes = codRes;
+		this.msjeRes = msjeRes;
+	}
+	public ResponseProduct(Long codRes, String msjeRes, Product product) {
+		this.product = product;
+		this.codRes = codRes;
+		this.msjeRes = msjeRes;
+	}
+	public ResponseProduct(Long codRes, String msjeRes, List<Product> products) {
+		this.listProduct	= products;
+		this.codRes 		= codRes;
+		this.msjeRes 		= msjeRes;
+	}
 	
 }
